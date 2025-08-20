@@ -1,12 +1,13 @@
 "use strict";
-
-///////////////////////////////////////
-// Modal window
-
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--show-modal");
+const btnScrollTo = document.querySelector(".btn--scroll-to");
+const section1 = document.querySelector("#section--1");
+
+///////////////////////////////////////
+// Modal window
 
 const openModal = function (e) {
   e.preventDefault(); //to prevent page to jumoing back to top when clciking ont eh anchor tag of open account
@@ -30,6 +31,68 @@ overlay.addEventListener("click", closeModal);
 document.addEventListener("keydown", function (e) {
   if (e.key === "Escape" && !modal.classList.contains("hidden")) {
     closeModal();
+  }
+});
+
+///////////////////////////////////////
+// button scrolling
+btnScrollTo.addEventListener("click", function (e) {
+  const s1coords = section1.getBoundingClientRect(); //to get the co ordinates of the section, an built in method
+  console.log("co ordinates of section 1", s1coords); // left means x axis, top means y axis
+  console.log(
+    "co ordinates of learn more button",
+    e.target.getBoundingClientRect()
+  );
+  // btnScrollTo.getBoundingClientRect()// instead of writing btnSrollTo we can also write e.target(btnscrollTo)
+
+  console.log(
+    "current scroll of the web-page x-axis and y-axis",
+    window.scrollX,
+    window.scrollY
+  );
+  console.log(
+    "height and width of the viewport",
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+  section1.scrollIntoView({
+    behavior: "smooth",
+  });
+});
+
+///////////////////////////////////////
+// page navigation
+// here we will learn about the event delegation
+// document.querySelectorAll(".nav__link").forEach(function (el) {
+//   el.addEventListener("click", function (e) {
+//     e.preventDefault();
+//     const id = this.getAttribute("href");
+//     // console.log(id);
+//     document.querySelector(id).scrollIntoView({
+//       behavior: "smooth",
+//     });
+//   });
+// });
+
+// now here comes the part of evenmt delegation and an better way of doing the above method and prage navigation
+
+// steps:
+// 1. Add event listener to the common parent which in this case is the '.nav__links(container of the links)
+// 2. determine what element originated the event
+// 3. make a matching strategy
+
+document.querySelector(".nav__links").addEventListener("click", function (e) {
+  e.preventDefault();
+  console.log(e.target);
+  // now the matching strategy
+  if (e.target.classList.contains("nav__link")) {
+    //if the element getting clicked on contains the class
+    console.log("LINK CLICKED");
+    const id = e.target.getAttribute("href");
+    console.log(id);
+    document.querySelector(id).scrollIntoView({
+      behavior: "smooth",
+    });
   }
 });
 
@@ -122,94 +185,94 @@ document.addEventListener("keydown", function (e) {
 ///////////////////////////////////////
 // developing
 
-//3.  implementing the smooth scrolling
-const btnScrollTo = document.querySelector(".btn--scroll-to");
-const section1 = document.querySelector("#section--1");
+// //3.  implementing the smooth scrolling
+// const btnScrollTo = document.querySelector(".btn--scroll-to");
+// const section1 = document.querySelector("#section--1");
 
-btnScrollTo.addEventListener("click", function (e) {
-  const s1coords = section1.getBoundingClientRect(); //to get the co ordinates of the section, an built in method
-  console.log("co ordinates of section 1", s1coords); // left means x axis, top means y axis
-  console.log(
-    "co ordinates of learn more button",
-    e.target.getBoundingClientRect()
-  );
-  // btnScrollTo.getBoundingClientRect()// instead of writing btnSrollTo we can also write e.target(btnscrollTo)
+// btnScrollTo.addEventListener("click", function (e) {
+//   const s1coords = section1.getBoundingClientRect(); //to get the co ordinates of the section, an built in method
+//   console.log("co ordinates of section 1", s1coords); // left means x axis, top means y axis
+//   console.log(
+//     "co ordinates of learn more button",
+//     e.target.getBoundingClientRect()
+//   );
+//   // btnScrollTo.getBoundingClientRect()// instead of writing btnSrollTo we can also write e.target(btnscrollTo)
 
-  console.log(
-    "current scroll of the web-page x-axis and y-axis",
-    window.scrollX,
-    window.scrollY
-  );
-  console.log(
-    "height and width of the viewport",
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
-  // now setting the scrolling and its effect
-  // method 1, involving calculation or numbers
-  // window.scrollTo( // the first paramter is always x axis, the other is y axis
-  //   s1coords.left + window.scrollX,
-  //   s1coords.top + window.scrollY
-  // );
-  //  method 2, passing the parameters as an object
-  // window.scrollTo({
-  //   left: s1coords.left + window.scrollX,
-  //   top: s1coords.top + window.scrollY,
-  //   behavior: "smooth",
-  // });
-  // method 3, for modern day browsers
-  section1.scrollIntoView({
-    behavior: "smooth",
-  });
-});
-
-// 4. adding and removing event listeners
-const h1 = document.querySelector("h1");
-// h1.addEventListener("click", function (e) {
-//   alert("you clicked on h1");
-
+//   console.log(
+//     "current scroll of the web-page x-axis and y-axis",
+//     window.scrollX,
+//     window.scrollY
+//   );
+//   console.log(
+//     "height and width of the viewport",
+//     document.documentElement.clientHeight,
+//     document.documentElement.clientWidth
+//   );
+//   // now setting the scrolling and its effect
+//   // method 1, involving calculation or numbers
+//   // window.scrollTo( // the first paramter is always x axis, the other is y axis
+//   //   s1coords.left + window.scrollX,
+//   //   s1coords.top + window.scrollY
+//   // );
+//   //  method 2, passing the parameters as an object
+//   // window.scrollTo({
+//   //   left: s1coords.left + window.scrollX,
+//   //   top: s1coords.top + window.scrollY,
+//   //   behavior: "smooth",
+//   // });
+//   // method 3, for modern day browsers
+//   section1.scrollIntoView({
+//     behavior: "smooth",
+//   });
 // });
 
-// now instead of clicking we use new event
-const alertH1 = function () {
-  alert("hovering over h1");
-};
-h1.addEventListener("mouseenter", alertH1);
-// h1.removeEventListener("mouseenter", alertH1);
-setTimeout(() => {
-  //if you do not take mosue on h1 wirh 3 seconds this wil remive the event
-  h1.removeEventListener("mouseenter", alertH1);
-}, 3000);
+// // 4. adding and removing event listeners
+// const h1 = document.querySelector("h1");
+// // h1.addEventListener("click", function (e) {
+// //   alert("you clicked on h1");
 
-// we can also add events with in html just like inline css
+// // });
 
-// 4. event porpagations (capturing, listening, bubbling(from down to top or opposite of capturing) are the three phases)
-const randomInt = (min, max) => Math.abs(Math.random() * (max - min + 1) + min);
+// // now instead of clicking we use new event
+// const alertH1 = function () {
+//   alert("hovering over h1");
+// };
+// h1.addEventListener("mouseenter", alertH1);
+// // h1.removeEventListener("mouseenter", alertH1);
+// setTimeout(() => {
+//   //if you do not take mosue on h1 wirh 3 seconds this wil remive the event
+//   h1.removeEventListener("mouseenter", alertH1);
+// }, 3000);
 
-const randomColor = () =>
-  `rgb(${randomInt(0, 255)},${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+// // we can also add events with in html just like inline css
 
-// console.log(randomColor());
+// // 4. event porpagations (capturing, listening, bubbling(from down to top or opposite of capturing) are the three phases)
+// const randomInt = (min, max) => Math.abs(Math.random() * (max - min + 1) + min);
+
+// const randomColor = () =>
+//   `rgb(${randomInt(0, 255)},${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+
+// // console.log(randomColor());
 
 // working of the caputring and bubling
 //what really happening is here is that if the nested(child) element have an eventlistener and its parentelement also have an eventlisten so by clicking on the child(nested)'s its own eventlistener will get triggered but at the same time the parent's event will also get triggered. and when we click on the parent's event its own event will get riggered but not its child's(nested) event, here in this case nav__link is the nested element and its parents are nav__links(container), nav both of them are its parents and all three of them have event listeners attache when we click on the nested child the other two parents event will also get triggerd and when if we clcik on any one of the parent's event(nav__links) then itself and its parent's event will get triggered but not its child(which is na__link)
-document.querySelector(".nav__link").addEventListener("click", function (e) {
-  this.style.backgroundColor = randomColor();
-  console.log("LINK CLICKED", e.target, e.currentTarget); //both target and current target points the same thing.
-  // e.stopPropagation(); // to stop the bubbling or event propogation, but it is an bad technique, only use in comlex applications.
-});
-document.querySelector(".nav__links").addEventListener("click", function (e) {
-  this.style.backgroundColor = randomColor();
-  console.log("CONTAINER CLICKED", e.target, e.currentTarget);
-});
-document.querySelector(".nav").addEventListener(
-  "click",
-  function (e) {
-    this.style.backgroundColor = randomColor();
-    console.log("NAV CONTAINER CLICKED", e.target, e.currentTarget);
-  },
-  true
-); //That last parameter (true) in addEventListener controls how the event is captured in the event propagation cycle. When an event (like click) happens on an element, it goes through three phases:
+// document.querySelector(".nav__link").addEventListener("click", function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log("LINK CLICKED", e.target, e.currentTarget); //both target and current target points the same thing.
+//   // e.stopPropagation(); // to stop the bubbling or event propogation, but it is an bad technique, only use in comlex applications.
+// });
+// document.querySelector(".nav__links").addEventListener("click", function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log("CONTAINER CLICKED", e.target, e.currentTarget);
+// });
+// document.querySelector(".nav").addEventListener(
+//   "click",
+//   function (e) {
+//     this.style.backgroundColor = randomColor();
+//     console.log("NAV CONTAINER CLICKED", e.target, e.currentTarget);
+//   },
+//   true
+// ); //That last parameter (true) in addEventListener controls how the event is captured in the event propagation cycle. When an event (like click) happens on an element, it goes through three phases:
 // 	1.	Capturing Phase (Top → Target)
 // The event starts at the top (e.g., document), travels down the DOM tree toward the target element.
 // 	2.	Target Phase
