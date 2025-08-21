@@ -97,7 +97,7 @@ document.querySelector(".nav__links").addEventListener("click", function (e) {
 });
 
 ///////////////////////////////////////
-// implementing tabbed components/ operations (section 2)
+// 6. implementing tabbed components/ operations (section 2)
 const tabs = document.querySelectorAll(".operations__tab");
 const tabsContainer = document.querySelector(".operations__tab-container");
 const tabsContent = document.querySelectorAll(".operations__content");
@@ -118,6 +118,119 @@ tabsContainer.addEventListener("click", function (e) {
     .classList.add("operations__content--active");
   // console.log(clicked.dataset.tab);
 });
+
+// // 7. adding the fade animation on the navigation links, again the use of event delegation by selecting the parent which is nav for nan links and the logo
+// const nav = document.querySelector(".nav");
+// nav.addEventListener("mouseover", function (e) {
+//   if (e.target.classList.contains("nav__link")) {
+//     const link = e.target;
+//     const siblings = link.closest(".nav").querySelectorAll(".nav__link");
+//     const logo = link.closest(".nav").querySelector("img");
+
+//     siblings.forEach((el) => {
+//       if (el !== link) el.style.opacity = 0.5;
+//     });
+//     logo.style.opacity = 0.5;
+//   }
+// });
+// nav.addEventListener("mouseout", function (e) {
+//   if (e.target.classList.contains("nav__link")) {
+//     const link = e.target;
+//     const siblings = link.closest(".nav").querySelectorAll(".nav__link");
+//     const logo = link.closest(".nav").querySelector("img");
+
+//     siblings.forEach((el) => {
+//       if (el !== link) el.style.opacity = 1;
+//     });
+//     logo.style.opacity = 1;
+//   }
+// });
+// method 2 if fading animationbyb redducing DRY and variable handleHover created.
+// const nav = document.querySelector(".nav");
+// const handleHover = function (e, opacity) {
+//   // before, here was only 1 arg but see the methods below
+//   if (e.target.classList.contains("nav__link")) {
+//     const link = e.target;
+//     const siblings = link.closest(".nav").querySelectorAll(".nav__link");
+//     const logo = link.closest(".nav").querySelector("img");
+
+//     siblings.forEach((el) => {
+//       if (el !== link) el.style.opacity = opacity; //before, here was the value but see the methods below
+//     });
+//     logo.style.opacity = opacity;
+//   }
+// };
+
+// /mehtod 1 of passing the arguements to an event handler's function that is also an function.
+// nav.addEventListener("mouseover", function (e) {
+//   handleHover(e, 0.5);
+// });
+// nav.addEventListener("mouseout", function (e) {
+//   handleHover(e, 1);
+// });
+
+// mehtod 2 of passing the arguements to an event handler's function that is also an function.
+const nav = document.querySelector(".nav");
+const handleHover = function (e) {
+  // before, here was only 1 arg but see the methods below
+  if (e.target.classList.contains("nav__link")) {
+    const link = e.target;
+    const siblings = link.closest(".nav").querySelectorAll(".nav__link");
+    const logo = link.closest(".nav").querySelector("img");
+
+    siblings.forEach((el) => {
+      if (el !== link) el.style.opacity = this; //we use this here in the below even listener method we used the bind method on handleover function so we actually bouding the handleHover function to use the arg we provided below in its function where the keyword this is present.
+    });
+    logo.style.opacity = this;
+  }
+};
+nav.addEventListener("mouseover", handleHover.bind(0.5));
+nav.addEventListener("mouseout", handleHover.bind(1));
+
+///////////////////////////////////////
+// Experimenting the intersection observer api
+
+// second thing created the call back function and teh options object
+
+// const obsCallBack = function (entries, observer) {
+//   entries.forEach((entry) => {
+//     console.log(entry);
+//   });
+// };
+
+// const obsOptions = {
+//   root: null,
+//   threshold: 0.1,
+// };
+
+// // first thing created
+// const observer = new IntersectionObserver(obsCallBack, obsOptions);
+
+// //calling it
+// observer.observe(section1);
+// This tells the observer to watch section1.
+// Now whenever section1 enters/exits the viewport (based on your threshold), the obsCallBack runs.
+
+// implementing the sticky nav bar using intersectong observer api
+const header = document.querySelector("header");
+const navHeight = nav.getBoundingClientRect().height;
+console.log(navHeight);
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  console.log("this is entry", entry);
+
+  if (!entry.isIntersecting) nav.classList.add("sticky");
+  else nav.classList.remove("sticky");
+};
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  // threshold: 0
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+
+headerObserver.observe(header);
 ///////////////////////////////////////
 // Learning
 
