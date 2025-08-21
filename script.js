@@ -61,7 +61,7 @@ btnScrollTo.addEventListener("click", function (e) {
 });
 
 ///////////////////////////////////////
-// page navigation
+// 5. page navigation
 // here we will learn about the event delegation
 // document.querySelectorAll(".nav__link").forEach(function (el) {
 //   el.addEventListener("click", function (e) {
@@ -96,6 +96,28 @@ document.querySelector(".nav__links").addEventListener("click", function (e) {
   }
 });
 
+///////////////////////////////////////
+// implementing tabbed components/ operations (section 2)
+const tabs = document.querySelectorAll(".operations__tab");
+const tabsContainer = document.querySelector(".operations__tab-container");
+const tabsContent = document.querySelectorAll(".operations__content");
+
+tabsContainer.addEventListener("click", function (e) {
+  const clicked = e.target.closest(".operations__tab"); // we add closest because in the button there are two more child elements sapna nd text there we use the conccept of event delegatio, because when we click the btn content it culd bt eh number or the text it triggers the whole btn parent elememt.
+  // console.log(clicked);
+  // the beneath condition is called the guard clause
+  if (!clicked) return; //if the function of clicked is false or null immdediateyly stops the function going forward, if the clciked is happened in the container of the operations tab container
+  //to remove the previous active classes from previoulsy activated tab and contents
+  tabs.forEach((t) => t.classList.remove("operations__tab--active"));
+  tabsContent.forEach((c) => c.classList.remove("operations__content--active"));
+  //to activate tab.
+  clicked.classList.add("operations__tab--active");
+  //to activate content area.
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add("operations__content--active");
+  // console.log(clicked.dataset.tab);
+});
 ///////////////////////////////////////
 // Learning
 
@@ -283,3 +305,31 @@ document.querySelector(".nav__links").addEventListener("click", function (e) {
 // This makes the .nav’s event listener run on the way down (capturing), before the event even reaches the .nav__link target.
 
 // If you removed the true, the same handler would run on the way back up (bubbling), after the child’s handlers. and if something is not present at the place of third paramter so it is false by default.
+
+// // 6. DOM TRAVERSING
+// const h1 = document.querySelector("h1");
+// // going downwards: child
+// console.log(h1.querySelectorAll(".highlight"));
+// console.log(h1.childNodes);
+// console.log(h1.children);
+// h1.firstElementChild.style.color = "white";
+// h1.lastElementChild.style.color = "red";
+
+// // going upwards: parents
+// console.log(h1.parentNode);
+// console.log(h1.parentElement);
+// h1.closest(".header").style.background = "var(--gradient-secondary)"; //selecting the nearest parent elemtn which has the class of header
+// h1.closest("h1").style.background = "var(--gradient-primary)"; // selecting the element itself
+
+// // going sideways: siblings
+// console.log(h1.nextElementSibling); //to check elements with in teh conatainer
+// console.log(h1.previousElementSibling);
+// console.log(h1.previousSibling);
+// console.log(h1.nextSibling);
+
+// // anothe rexample of dom traversing
+// console.log(h1.parentElement.children);
+// console.log([...h1.parentElement.children]);
+// [...h1.parentElement.children].forEach(function (el) {
+//   if (el !== h1) el.style.transform = "scale(0.5)";
+// });
