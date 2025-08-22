@@ -278,55 +278,113 @@ imgTargets.forEach((img) => imgObserver.observe(img));
 
 ///////////////////////////////////////
 // adding the slider in the third section
-const slides = document.querySelectorAll(".slide");
-const slider = document.querySelector(".slider");
-const btnLeft = document.querySelector(".slider__btn--left");
-const btnRight = document.querySelector(".slider__btn--right");
-let curSlide = 0;
-const maxSlide = slides.length;
+const slider = function () {
+  //enclosing this all slider into an slider function
+  const slides = document.querySelectorAll(".slide");
+  const slider = document.querySelector(".slider");
+  const btnLeft = document.querySelector(".slider__btn--left");
+  const btnRight = document.querySelector(".slider__btn--right");
+  let curSlide = 0;
+  const maxSlide = slides.length;
+  const dotContainer = document.querySelector(".dots");
 
-// slider.style.transform = `scale(0.5) translateX(-800px)`;
-// slider.style.overflow = `visible`;
-// slides.forEach(
-//   (s, i) =>
-//     (s.style.transform =
-//       //first image translatex. = 0%
-//       //second image translatex. = 100%
-//       //third image translatex. = 200%
-//       `translateX(${100 * i}%)`)
-// );
+  // slider.style.transform = `scale(0.5) translateX(-800px)`;
+  // slider.style.overflow = `visible`;
+  // slides.forEach(
+  //   (s, i) =>
+  //     (s.style.transform =
+  //       //first image translatex. = 0%
+  //       //second image translatex. = 100%
+  //       //third image translatex. = 200%
+  //       `translateX(${100 * i}%)`)
+  // );
 
-const goToSlide = function (slide) {
-  slides.forEach(
-    // now we want the translate x property to move in the negative values like -(negative)
-    (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
-  );
+  // functions
+  const createDots = function () {
+    slides.forEach((_, i) => {
+      dotContainer.insertAdjacentHTML(
+        "beforeend",
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
+
+  // createDots();
+
+  // highlighting the dot of current slide
+  const activateDot = function (slide) {
+    // remove active class from all dots
+    document
+      .querySelectorAll(".dots__dot")
+      .forEach((dot) => dot.classList.remove("dots__dot--active"));
+
+    // add active class to the clicked/current dot
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add("dots__dot--active");
+  };
+
+  // activateDot(0);
+  const goToSlide = function (slide) {
+    slides.forEach(
+      // now we want the translate x property to move in the negative values like -(negative)
+      (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+    );
+  };
+
+  // goToSlide(0);
+
+  //moving to next slide
+  const nextSlide = function () {
+    if (curSlide === maxSlide - 1) {
+      curSlide = 0;
+    } else {
+      curSlide++;
+    }
+
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
+
+  //goingn to previous slide
+  const prevSlide = function () {
+    if (curSlide === 0) {
+      curSlide = maxSlide - 1;
+    } else {
+      curSlide--;
+    }
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
+
+  const init = function () {
+    goToSlide(0);
+    createDots();
+    activateDot(0);
+  };
+
+  init();
+
+  //EventListeners
+  btnRight.addEventListener("click", nextSlide);
+  btnLeft.addEventListener("click", prevSlide);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") {
+      prevSlide();
+    } else if (e.key === "ArrowRight") {
+      nextSlide();
+    }
+  });
+  //when we click on one of the dots
+  dotContainer.addEventListener("click", function (e) {
+    if (e.target.classList.contains("dots__dot")) {
+      curSlide = Number(e.target.dataset.slide);
+      goToSlide(curSlide);
+      activateDot(curSlide);
+    }
+  });
 };
-
-goToSlide(0);
-
-//moving to next slide
-const nextSlide = function () {
-  if (curSlide === maxSlide - 1) {
-    curSlide = 0;
-  } else {
-    curSlide++;
-  }
-
-  goToSlide(curSlide);
-};
-
-const prevSlide = function () {
-  if (curSlide === 0) {
-    curSlide = maxSlide - 1;
-  } else {
-    curSlide--;
-  }
-  goToSlide(curSlide);
-};
-btnRight.addEventListener("click", nextSlide);
-btnLeft.addEventListener("click", prevSlide);
-
+slider();
 ///////////////////////////////////////
 // Learning
 
