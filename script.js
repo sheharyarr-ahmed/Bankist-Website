@@ -277,6 +277,57 @@ const imgObserver = new IntersectionObserver(loadImg, {
 imgTargets.forEach((img) => imgObserver.observe(img));
 
 ///////////////////////////////////////
+// adding the slider in the third section
+const slides = document.querySelectorAll(".slide");
+const slider = document.querySelector(".slider");
+const btnLeft = document.querySelector(".slider__btn--left");
+const btnRight = document.querySelector(".slider__btn--right");
+let curSlide = 0;
+const maxSlide = slides.length;
+
+// slider.style.transform = `scale(0.5) translateX(-800px)`;
+// slider.style.overflow = `visible`;
+// slides.forEach(
+//   (s, i) =>
+//     (s.style.transform =
+//       //first image translatex. = 0%
+//       //second image translatex. = 100%
+//       //third image translatex. = 200%
+//       `translateX(${100 * i}%)`)
+// );
+
+const goToSlide = function (slide) {
+  slides.forEach(
+    // now we want the translate x property to move in the negative values like -(negative)
+    (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+  );
+};
+
+goToSlide(0);
+
+//moving to next slide
+const nextSlide = function () {
+  if (curSlide === maxSlide - 1) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+
+  goToSlide(curSlide);
+};
+
+const prevSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide - 1;
+  } else {
+    curSlide--;
+  }
+  goToSlide(curSlide);
+};
+btnRight.addEventListener("click", nextSlide);
+btnLeft.addEventListener("click", prevSlide);
+
+///////////////////////////////////////
 // Learning
 
 // // 1. for selecting the elements
